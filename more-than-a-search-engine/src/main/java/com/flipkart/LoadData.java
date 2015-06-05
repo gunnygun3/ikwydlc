@@ -23,7 +23,7 @@ public class LoadData {
         objectMapper = new ObjectMapper();
         Settings settings = ImmutableSettings.settingsBuilder()
                 .put("discovery.zen.ping.multicast.enabled", "false")
-                .put("discovery.zen.ping.unicast.hosts", "localhost")
+                .put("discovery.zen.ping.unicast.hosts", "172.20.209.107")
                 .put("node.name", "local-app")
                 .put("cluster.name", "zulu-hack")
                 .build();

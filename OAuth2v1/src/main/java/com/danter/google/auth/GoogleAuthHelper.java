@@ -1,6 +1,7 @@
 package com.danter.google.auth;
 
 import com.flipkart.Document;
+import com.flipkart.LoadData;
 import com.flipkart.OrgDirectory;
 import com.flipkart.UserInfo;
 import com.google.api.client.auth.oauth2.Credential;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -345,7 +347,13 @@ public final class GoogleAuthHelper {
 
         System.out.println("-----------------------------");
         List<Document> calendarData = getCalanderData(stDate, endDate);
+
         System.out.println(calendarData);
+
+        LoadData loadData = new LoadData();
+        loadData.loadData(gmailData);
+        loadData.loadData(calendarData);
+
         return "Data Imported!";
     }
 
