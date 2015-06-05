@@ -1,0 +1,81 @@
+{
+  "hackday": {
+    "properties": {
+      "userId": {
+        "type": "string",
+        "store": true,
+        "index": "not_analyzed"
+      },
+      "source": {
+        "type": "string",
+        "store": true,
+        "index": "not_analyzed"
+      },
+      "timestamp": {
+        "type": "date",
+        "store": true,
+        "format": "dateOptionalTime"
+      },
+      "title": {
+        "type": "string",
+        "store": true
+      },
+      "contents": {
+        "type": "string",
+        "store": true
+      },
+      "participants": {
+        "type": "nested",
+        "properties": {
+          "name": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "designation": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "team": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "email": {
+            "type": "string",
+            "store": true,
+            "index": "not_analyzed"
+          }
+        }
+      },
+      "organiser": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "designation": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "team": {
+            "type": "string",
+            "index": "not_analyzed",
+            "store": true
+          },
+          "email": {
+            "type": "string",
+            "store": true,
+            "index": "not_analyzed"
+          }
+        }
+      },
+      "accepted":{
+        "type":"boolean"
+      }
+    }
+  }
+}
