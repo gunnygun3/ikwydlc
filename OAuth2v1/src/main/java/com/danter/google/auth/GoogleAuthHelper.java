@@ -16,27 +16,25 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -313,7 +311,6 @@ public final class GoogleAuthHelper {
                     }
                 }
             }
-            System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
             Document doc = new Document();
 
             if (createdBy != null)
@@ -339,16 +336,16 @@ public final class GoogleAuthHelper {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public String importData(String stDate, String endDate) throws Exception {
+    public String importData(String stDate, String endDate, JspWriter out) throws Exception {
         String userInfo = getUserInfoJson();
-        List<Document> gmailData = getGmailData();
-        System.out.println(userInfo);
-        System.out.println(gmailData);
+        out.println("Started import for user " + userInfo);
 
-        System.out.println("-----------------------------");
+        List<Document> gmailData = getGmailData();
+        out.println("Total sent email retrieved = " + gmailData.size());
+        
         List<Document> calendarData = getCalanderData(stDate, endDate);
 
-        System.out.println(calendarData);
+        out.println("Total calendar events retrieved: " + calendarData.size());
 
         LoadData loadData = new LoadData();
         loadData.loadData(gmailData);
