@@ -16,27 +16,25 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -139,7 +137,7 @@ public final class GoogleAuthHelper {
 
     }
 
-    public List<Document> getGmailData() throws Exception {
+    public List<Document> getGmailData(JspWriter out) throws Exception {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
@@ -148,7 +146,7 @@ public final class GoogleAuthHelper {
         String userInfo = getUserInfoJson();
 
         List<String> threadIDs = getThreadIDs( new JSONObject(jsonIdentity));
-        List<MailData> threadData = getThreadData(threadIDs);
+        List<MailData> threadData = getThreadData(threadIDs, out);
         OrgDirectory orgDirectory = new OrgDirectory();
 
         List<Document> gmailDocument = new ArrayList<Document>();
@@ -173,11 +171,16 @@ public final class GoogleAuthHelper {
         return gmailDocument;
     }
 
-    public List<MailData> getThreadData(List<String> threadIDs) throws Exception {
+    public List<MailData> getThreadData(List<String> threadIDs, JspWriter out) throws Exception {
 
         List<MailData> completeMailData = new ArrayList<MailData>();
 
+        int cnt = 0;
         for (String threadID : threadIDs) {
+            if (cnt++ % 10 == 0) {
+                out.println("Imported email thread..." + cnt);
+                out.flush();
+            }
             MailData mailData = new MailData();
             GenericUrl url = new GenericUrl(THREAD_DATA_URL + threadID );
             HttpRequest request = requestFactory.buildGetRequest(url);
@@ -313,7 +316,6 @@ public final class GoogleAuthHelper {
                     }
                 }
             }
-            System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
             Document doc = new Document();
 
             if (createdBy != null)
@@ -339,16 +341,16 @@ public final class GoogleAuthHelper {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public String importData(String stDate, String endDate) throws Exception {
+    public String importData(String stDate, String endDate, JspWriter out) throws Exception {
         String userInfo = getUserInfoJson();
-        List<Document> gmailData = getGmailData();
-        System.out.println(userInfo);
-        System.out.println(gmailData);
+        out.println("Started import for user " + userInfo);
 
-        System.out.println("-----------------------------");
+        List<Document> gmailData = getGmailData(out);
+        out.println("Total sent email retrieved = " + gmailData.size());
+
         List<Document> calendarData = getCalanderData(stDate, endDate);
 
-        System.out.println(calendarData);
+        out.println("Total calendar events retrieved: " + calendarData.size());
 
         LoadData loadData = new LoadData();
         loadData.loadData(gmailData);

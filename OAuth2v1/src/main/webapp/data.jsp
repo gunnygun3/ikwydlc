@@ -8,9 +8,10 @@
             final GoogleAuthHelper helper = new GoogleAuthHelper(request.getParameter("code"));
             session.removeAttribute("state");
 
-            String resp = helper.importData("2015-05-01", "2015-05-31");
-
             out.println("<pre>");
+
+            String resp = helper.importData("2015-05-01", "2015-05-31", out);
+
             out.println(resp);
             out.println();
 
