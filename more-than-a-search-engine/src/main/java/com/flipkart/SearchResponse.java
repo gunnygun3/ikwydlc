@@ -1,21 +1,19 @@
 package com.flipkart;
 
-import org.json.JSONObject;
-
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gopi.vishwakarma on 05/06/15.
  */
 public class SearchResponse {
-    private Collection<ESDocument> documents;
+    private Map<String, Collection<Document>> documents;
 
-    public SearchResponse(Collection<ESDocument> documents) {
+    public SearchResponse(Map<String, Collection<Document>> documents) {
         this.documents = documents;
     }
 
-    public Collection<ESDocument> getDocuments() {
+    public Map<String, Collection<Document>> getDocuments() {
         return documents;
     }
 

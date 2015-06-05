@@ -22,4 +22,11 @@ public class SearchTest {
         System.out.println(response.getDocuments());
 
     }
+
+    @Test
+    public void testPipe() throws  Exception{
+        String str = "abc pqr";
+        String ans [] = str.split("\\|\\|");
+        System.out.println(ans.length + " === " + str.length());
+    }
 }

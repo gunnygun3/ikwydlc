@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by gopi.vishwakarma on 05/06/15.
  */
-public class ESDocument {
+public class Document {
     private String userId;
     private String title;
     private String source;
@@ -18,7 +18,7 @@ public class ESDocument {
     private List<UserInfo> participants;
     private boolean attended;
 
-    public ESDocument() {
+    public Document() {
     }
 
     public String getTitle() {
@@ -102,20 +102,19 @@ public class ESDocument {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ESDocument)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ESDocument that = (ESDocument) o;
+        Document document = (Document) o;
 
-        if (attended != that.attended) return false;
-        if (contents != null ? !contents.equals(that.contents) : that.contents != null) return false;
-        if (organiser != null ? !organiser.equals(that.organiser) : that.organiser != null) return false;
-        if (participants != null ? !participants.equals(that.participants) : that.participants != null) return false;
-        if (source != null ? !source.equals(that.source) : that.source != null) return false;
-        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (attended != document.attended) return false;
+        if (userId != null ? !userId.equals(document.userId) : document.userId != null) return false;
+        if (title != null ? !title.equals(document.title) : document.title != null) return false;
+        if (source != null ? !source.equals(document.source) : document.source != null) return false;
+        if (timestamp != null ? !timestamp.equals(document.timestamp) : document.timestamp != null) return false;
+        if (contents != null ? !contents.equals(document.contents) : document.contents != null) return false;
+        if (organiser != null ? !organiser.equals(document.organiser) : document.organiser != null) return false;
+        return !(participants != null ? !participants.equals(document.participants) : document.participants != null);
 
-        return true;
     }
 
     @Override
