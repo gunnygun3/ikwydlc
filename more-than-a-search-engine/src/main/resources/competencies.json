@@ -31,6 +31,14 @@
       "RCA",
       "Root Cause Analysis"
     ],
+    "debugging":[
+      "oncall",
+      "testing",
+      "stage",
+      "health",
+      "lag",
+      "failure"
+    ],
     "team_building": [
       "Counter strike",
       "football",
