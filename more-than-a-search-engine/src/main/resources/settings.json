@@ -1,0 +1,161 @@
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "analyzer": {
+          "my_analyzer": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": "lowercase"
+          },
+          "special_char_remover": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "special_char_pattern",
+              "lowercase",
+              "trim"
+            ]
+          },
+          "special_char_and_white_remover": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "special_char_pattern",
+              "lowercase",
+              "all_white_space_remover"
+            ]
+          },
+          "stop_word_remover": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "filter_stop",
+              "lowercase"
+            ]
+          },
+          "trimmer": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase",
+              "trim"
+            ]
+          },
+          "extra_white_space_remover": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "extra_white_space_remover",
+              "lowercase"
+            ]
+          },
+          "all_white_space_remover": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase",
+              "all_white_space_remover"
+            ]
+          }
+        },
+        "filter": {
+          "filter_stop": {
+            "type": "stop",
+            "enable_position_increments": "true",
+            "ignore_case": "true",
+            "stopwords": [
+              "_english_"
+            ]
+          },
+          "special_char_pattern": {
+            "type": "pattern_replace",
+            "pattern": "[^0-9a-zA-Z ]+",
+            "replacement": ""
+          },
+          "extra_white_space_remover": {
+            "type": "pattern_replace",
+            "pattern": "\\s+",
+            "replacement": " "
+          },
+          "all_white_space_remover": {
+            "type": "pattern_replace",
+            "pattern": "\\s+",
+            "replacement": ""
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "ikwydlc": {
+      "properties": {
+        "userId": {
+          "type": "string",
+          "store": true
+        },
+        "source": {
+          "type": "string",
+          "store": true
+        },
+        "timestamp": {
+          "type": "date",
+          "store": true,
+          "format": "dateOptionalTime"
+        },
+        "title": {
+          "type": "string",
+          "store": true
+        },
+        "contents": {
+          "type": "nested",
+          "properties": {
+            "content": {
+              "type": "string",
+              "store": true
+            }
+          }
+        },
+        "participants": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            },
+            "designation": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            },
+            "team": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            }
+          }
+        },
+        "organiser": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            },
+            "designation": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            },
+            "team": {
+              "type": "string",
+              "index": "not_analyzed",
+              "store": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
