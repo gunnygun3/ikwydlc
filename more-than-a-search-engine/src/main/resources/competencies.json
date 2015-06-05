@@ -29,7 +29,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "debugging":[
       "oncall",
@@ -89,7 +90,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",
@@ -159,7 +161,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",
@@ -245,7 +248,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",
