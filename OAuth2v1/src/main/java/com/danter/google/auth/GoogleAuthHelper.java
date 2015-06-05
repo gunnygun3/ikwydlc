@@ -1,5 +1,6 @@
 package com.danter.google.auth;
 
+import com.flipkart.ESDocument;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
@@ -152,6 +153,10 @@ public final class GoogleAuthHelper {
         JsonNode calNode = mapper.readTree(jsonStr);
         JsonNode items = calNode.get("items");
 
+        List<ESDocument> esDocumentList = Lists.newArrayList();
+
+
+
 
         for (JsonNode item : items) {
             JsonNode organizer = item.get("organizer");
@@ -184,6 +189,8 @@ public final class GoogleAuthHelper {
                 }
             }
             System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
+            ESDocument doc = new ESDocument();
+
 
         }
         return null;
