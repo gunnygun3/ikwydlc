@@ -1,14 +1,11 @@
 package com.flipkart;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -51,17 +48,17 @@ public class ESSearch implements Search {
     public SearchResponse search(UserInfo userInfo) throws Exception {
         String userId = userInfo.getEmail();
         String designation = userInfo.getDesignation();
-        return buildSearchRequest(userId, designation);
-
+        return search(userId, designation);
     }
 
-    private SearchResponse buildSearchRequest(String userId, String designation) throws Exception {
+    private SearchResponse search(String userId, String designation) throws Exception {
 
-        Set<ESDocument> docs = new HashSet<>();
+        Map<String, Collection<Document>> map = new HashMap<>();
 
         JSONObject comp = competencies.optJSONObject(designation);
         Iterator<String> keys = comp.keys();
         while (keys.hasNext()) {
+            Set<Document> docs = new HashSet<>();
             String competency = keys.next();
             JSONArray keywords = comp.optJSONArray(competency);
             BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
@@ -79,19 +76,19 @@ public class ESSearch implements Search {
                     .setTypes("hackday")
                     .setSearchType(SearchType.QUERY_THEN_FETCH)
                     .setQuery(boolQueryBuilder)
-                    .setSize(-1).execute().actionGet();
+                    .setSize(10).execute().actionGet();
             if (response.getHits().getHits().length > 0) {
                 SearchHit searchHits[] = response.getHits().getHits();
                 for (int i = 0; i < searchHits.length; i++) {
                     SearchHit searchHit = searchHits[i];
-                    ESDocument esDocument = objectMapper.readValue(searchHit.getSourceAsString(), ESDocument.class);
-                    docs.add(esDocument);
+                    Document document = objectMapper.readValue(searchHit.getSourceAsString(), Document.class);
+                    docs.add(document);
                 }
             }
-
+            map.put(competency, docs);
         }
 
-        return new SearchResponse(docs);
+        return new SearchResponse(map);
     }
 
     private JSONObject buildCompSchema() {

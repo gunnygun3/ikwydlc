@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by gopi.vishwakarma on 05/06/15.
  */
-public class ESDocument {
+public class Document {
     private String userId;
     private String title;
     private String source;
@@ -18,7 +18,7 @@ public class ESDocument {
     private List<UserInfo> participants;
     private boolean attended;
 
-    public ESDocument() {
+    public Document() {
     }
 
     public String getTitle() {
@@ -104,7 +104,7 @@ public class ESDocument {
         if (this == o) return true;
         if (!(o instanceof ESDocument)) return false;
 
-        ESDocument that = (ESDocument) o;
+        Document that = (Document) o;
 
         if (attended != that.attended) return false;
         if (contents != null ? !contents.equals(that.contents) : that.contents != null) return false;
