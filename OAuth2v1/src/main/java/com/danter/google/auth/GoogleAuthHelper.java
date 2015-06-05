@@ -137,7 +137,7 @@ public final class GoogleAuthHelper {
 
     }
 
-    public List<Document> getGmailData() throws Exception {
+    public List<Document> getGmailData(JspWriter out) throws Exception {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
@@ -146,7 +146,7 @@ public final class GoogleAuthHelper {
         String userInfo = getUserInfoJson();
 
         List<String> threadIDs = getThreadIDs( new JSONObject(jsonIdentity));
-        List<MailData> threadData = getThreadData(threadIDs);
+        List<MailData> threadData = getThreadData(threadIDs, out);
         OrgDirectory orgDirectory = new OrgDirectory();
 
         List<Document> gmailDocument = new ArrayList<Document>();
@@ -171,11 +171,16 @@ public final class GoogleAuthHelper {
         return gmailDocument;
     }
 
-    public List<MailData> getThreadData(List<String> threadIDs) throws Exception {
+    public List<MailData> getThreadData(List<String> threadIDs, JspWriter out) throws Exception {
 
         List<MailData> completeMailData = new ArrayList<MailData>();
 
+        int cnt = 0;
         for (String threadID : threadIDs) {
+            if (cnt++ % 10 == 0) {
+                out.println("Imported email thread..." + cnt);
+                out.flush();
+            }
             MailData mailData = new MailData();
             GenericUrl url = new GenericUrl(THREAD_DATA_URL + threadID );
             HttpRequest request = requestFactory.buildGetRequest(url);
@@ -340,9 +345,9 @@ public final class GoogleAuthHelper {
         String userInfo = getUserInfoJson();
         out.println("Started import for user " + userInfo);
 
-        List<Document> gmailData = getGmailData();
+        List<Document> gmailData = getGmailData(out);
         out.println("Total sent email retrieved = " + gmailData.size());
-        
+
         List<Document> calendarData = getCalanderData(stDate, endDate);
 
         out.println("Total calendar events retrieved: " + calendarData.size());
