@@ -1,5 +1,6 @@
 package com.flipkart;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,16 +33,26 @@ public class ArtificialRanker {
 
             Collections.sort(list, new Comparator<Document>() {
                 public int compare(Document idx1, Document idx2) {
-                    double w1 = idx1.getContents().split("\\|\\|").length;
-                    double w2 = idx2.getContents().split("\\|\\|").length;
-                    for (UserInfo userInfo : idx1.getParticipants()) {
-                        w1 += (weights.optDouble(userInfo.getDesignation()) == Double.NaN) ? 0.0 : weights.optDouble(userInfo.getDesignation());
-                    }
-                    for (UserInfo userInfo : idx2.getParticipants()) {
-                        w2 += (weights.optDouble(userInfo.getDesignation()) == Double.NaN) ? 0.0 : weights.optDouble(userInfo.getDesignation());
-                    }
+                    double w1 = (StringUtils.isNotEmpty(idx1.getContents()))? idx1.getContents().split("\\|\\|").length : 0.0;
+                    double w2 = (StringUtils.isNotEmpty(idx2.getContents()))? idx2.getContents().split("\\|\\|").length : 0.0;
+
+                    w1 = getWeights(idx1, w1);
+                    w2 = getWeights(idx2, w2);
+
+                    if (idx1.isAttended()) w1 += 5.0;
+                    if (idx2.isAttended()) w2 += 5.0;
+
+                    if(idx1.getUserId().equalsIgnoreCase(idx1.getOrganiser().getEmail())) w1 += 7.0;
+                    if(idx2.getUserId().equalsIgnoreCase(idx2.getOrganiser().getEmail())) w2 += 7.0;
 
                     return w1 < w2 ? 1 : (w1 > w2 ? -1 : 0);
+                }
+
+                private double getWeights(Document idx2, double w2) {
+                    for (UserInfo userInfo : idx2.getParticipants()) {
+                        w2 += (weights.optDouble(userInfo.getDesignation()) == Double.NaN) ? 0.5 : weights.optDouble(userInfo.getDesignation());
+                    }
+                    return w2;
                 }
             });
             result.put(entry.getKey(), list);

@@ -38,6 +38,11 @@
             <artifactId>json</artifactId>
             <version>20131018</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
