@@ -1,6 +1,6 @@
 package com.danter.google.auth;
 
-import com.flipkart.ESDocument;
+import com.flipkart.Document;
 import com.flipkart.OrgDirectory;
 import com.flipkart.UserInfo;
 import com.google.api.client.auth.oauth2.Credential;
@@ -137,7 +137,7 @@ public final class GoogleAuthHelper {
 
     }
 
-    public List<ESDocument> getGmailData() throws Exception {
+    public List<Document> getGmailData() throws Exception {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
@@ -149,9 +149,9 @@ public final class GoogleAuthHelper {
         List<MailData> threadData = getThreadData(threadIDs);
         OrgDirectory orgDirectory = new OrgDirectory();
 
-        List<ESDocument> gmailDocument = new ArrayList<ESDocument>();
+        List<Document> gmailDocument = new ArrayList<Document>();
         for (MailData mailData: threadData){
-            ESDocument document = new ESDocument();
+            Document document = new Document();
             document.setTimestamp(mailData.getTimestamp());
             document.setTitle(mailData.getTitle());
             document.setAttended(false);
@@ -263,7 +263,7 @@ public final class GoogleAuthHelper {
     private static final String CALANDER_INFO_URL = "https://www.googleapis.com/calendar/v3/calendars/<EMAIL_ID>/events?timeMax=<END_TIME>&timeMin=<ST_TIME>";
 
 
-    private List<ESDocument> getCalanderData(String stDate, String endDate) throws Exception {
+    private List<Document> getCalanderData(String stDate, String endDate) throws Exception {
         // Make an authenticated request
         String userEmailId = getEmailId();
         DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTime();
@@ -276,7 +276,7 @@ public final class GoogleAuthHelper {
         JsonNode calNode = mapper.readTree(jsonStr);
         JsonNode items = calNode.get("items");
 
-        List<ESDocument> esDocumentList = Lists.newArrayList();
+        List<Document> esDocumentList = Lists.newArrayList();
 
 
         OrgDirectory orgDirectory = new OrgDirectory();
@@ -312,7 +312,7 @@ public final class GoogleAuthHelper {
                 }
             }
             System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
-            ESDocument doc = new ESDocument();
+            Document doc = new Document();
 
             if (createdBy != null)
                 doc.setOrganiser(orgDirectory.getInfo(createdBy));
@@ -339,12 +339,12 @@ public final class GoogleAuthHelper {
 
     public String importData(String stDate, String endDate) throws Exception {
         String userInfo = getUserInfoJson();
-        List<ESDocument> gmailData = getGmailData();
+        List<Document> gmailData = getGmailData();
         System.out.println(userInfo);
         System.out.println(gmailData);
 
         System.out.println("-----------------------------");
-        List<ESDocument> calendarData = getCalanderData(stDate, endDate);
+        List<Document> calendarData = getCalanderData(stDate, endDate);
         System.out.println(calendarData);
         return "Data Imported!";
     }
