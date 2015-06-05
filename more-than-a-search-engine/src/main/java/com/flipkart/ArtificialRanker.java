@@ -42,8 +42,8 @@ public class ArtificialRanker {
                     if (idx1.isAttended()) w1 += 5.0;
                     if (idx2.isAttended()) w2 += 5.0;
 
-                    if(idx1.getUserId().equalsIgnoreCase(idx1.getOrganiser().getEmail())) w1 += 7.0;
-                    if(idx2.getUserId().equalsIgnoreCase(idx2.getOrganiser().getEmail())) w2 += 7.0;
+                    if(idx1.getUserId().equalsIgnoreCase(idx1.getOrganiser() != null ? idx1.getOrganiser().getEmail() : "")) w1 += 7.0;
+                    if(idx2.getUserId().equalsIgnoreCase(idx2.getOrganiser()!=null ? idx2.getOrganiser().getEmail() : "")) w2 += 7.0;
 
                     return w1 < w2 ? 1 : (w1 > w2 ? -1 : 0);
                 }

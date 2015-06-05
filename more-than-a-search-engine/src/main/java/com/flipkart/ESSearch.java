@@ -59,7 +59,7 @@ public class ESSearch implements Search {
                     .setTypes("hackday")
                     .setSearchType(SearchType.QUERY_THEN_FETCH)
                     .setQuery(boolQueryBuilder)
-                    .setSize(10).execute().actionGet();
+                    .setSize(30).execute().actionGet();
             if (response.getHits().getHits().length > 0) {
                 SearchHit searchHits[] = response.getHits().getHits();
                 for (int i = 0; i < searchHits.length; i++) {
