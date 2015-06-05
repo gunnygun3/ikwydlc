@@ -11,11 +11,19 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.common.collect.Lists;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -104,10 +112,9 @@ public final class GoogleAuthHelper {
     /**
      * Expects an Authentication Code, and makes an authenticated request for the user's profile information
      *
-     * @param authCode authentication code provided by google
      * @return JSON formatted user profile information
      */
-    public String getUserInfoJson(final String authCode) throws IOException {
+    public String getUserInfoJson() throws IOException {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(USER_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
@@ -118,7 +125,7 @@ public final class GoogleAuthHelper {
 
     }
 
-    public String getGmailData(String authCode) throws Exception {
+    public String getGmailData() throws Exception {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
@@ -128,12 +135,79 @@ public final class GoogleAuthHelper {
         return jsonIdentity;
     }
 
-    public String importData(String code) throws Exception {
-        String userInfo = getUserInfoJson(code);
-        String gmailData = getGmailData(code);
+
+    private static final String CALANDER_INFO_URL = "https://www.googleapis.com/calendar/v3/calendars/<EMAIL_ID>/events?timeMax=<END_TIME>&timeMin=<ST_TIME>";
+
+
+    private String getCalanderData(String stDate, String endDate) throws Exception {
+        // Make an authenticated request
+        String userEmailId = getEmailId();
+        DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTime();
+        String urlStr  = CALANDER_INFO_URL.replace("<EMAIL_ID>", URLEncoder.encode(getEmailId(), "UTF-8")).replace("<ST_TIME>", URLEncoder.encode(dateTimeFormatter.print(DateTime.parse(stDate)), "UTF-8")).replace("<END_TIME>", URLEncoder.encode(dateTimeFormatter.print(DateTime.parse(endDate)), "UTF-8"));
+        System.out.println(urlStr);
+        final GenericUrl url = new GenericUrl(urlStr);
+        final HttpRequest request = requestFactory.buildGetRequest(url);
+        request.getHeaders().setContentType("application/json");
+        final String jsonStr = request.execute().parseAsString();
+        JsonNode calNode = mapper.readTree(jsonStr);
+        JsonNode items = calNode.get("items");
+
+
+        for (JsonNode item : items) {
+            JsonNode organizer = item.get("organizer");
+            String createdBy = null;
+            if (organizer != null) {
+                createdBy = organizer.get("email") != null ? organizer.get("email").getTextValue(): null;
+            }
+            String title = item.get("summary") != null ? item.get("summary").getTextValue() : null;
+            String desc = item.get("description") != null ? item.get("description").getTextValue() : null;
+            String timestamp = null;
+            if (item.get("start") != null) {
+                JsonNode jsonNode = item.get("start").get("date");
+                if (jsonNode != null)
+                    timestamp = jsonNode.getTextValue();
+            }
+            boolean accepted = false;
+            List<String> participants = Lists.newArrayList();
+            JsonNode parts = item.get("attendees");
+            if (parts != null) {
+                for (JsonNode part : parts) {
+                    String email = part.get("email").getTextValue();
+                    if (!email.startsWith("flipkart.com")) {
+                        participants.add(email);
+                    }
+                    if (email.equalsIgnoreCase(userEmailId)) {
+                        if ("accepted".equalsIgnoreCase(part.get("responseStatus").getTextValue())) {
+                            accepted = true;
+                        }
+                    }
+                }
+            }
+            System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
+
+        }
+        return null;
+    }
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    public String importData(String stDate, String endDate) throws Exception {
+        String userInfo = getUserInfoJson();
+        String gmailData = getGmailData();
         System.out.println(userInfo);
         System.out.println(gmailData);
+
+        System.out.println("-----------------------------");
+        String calendarData = getCalanderData(stDate, endDate);
+        System.out.println(calendarData);
         return "Data Imported!";
+    }
+
+    private String getEmailId() throws IOException {
+        String userInfo = getUserInfoJson();
+        JsonNode userNode = mapper.readTree(userInfo);
+        String emailId = userNode.get("email").getTextValue();
+        return emailId;
     }
 
 	/*public static void listThreadsWithLabels (Gmail service, String userId,
