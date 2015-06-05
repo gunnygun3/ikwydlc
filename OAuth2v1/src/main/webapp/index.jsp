@@ -83,9 +83,16 @@ body {
 				 * At this point you should parse and persist the info.
 				 */
 
-				out.println(helper.getUserInfoJson(request.getParameter("code")));
+				//out.println(helper.getUserInfoJson(request.getParameter("code")));
 
 				out.println("</pre>");
+
+				out.println("<pre>");
+
+				out.println(helper.getGmailData(request.getParameter("code")));
+
+				out.println("</pre>");
+
 			}
 		%>
 	</div>

@@ -15,6 +15,8 @@ import com.google.api.client.json.jackson.JacksonFactory;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Collection;
+
 
 /**
  * A helper class for Google's OAuth2 authentication API.
@@ -38,12 +40,14 @@ public final class GoogleAuthHelper {
 	private static final String CALLBACK_URI = "http://localhost:8080/OAuth2v1/index.jsp";
 	
 	// start google authentication constants
-	private static final Iterable<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/gmail.readonly;https://www.googleapis.com/auth/calendar.readonly".split(";"));
 	private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
+	private static final String THREAD_INFO_URL = "https://www.googleapis.com/gmail/v1/users/me/threads?labelIds=SENT";
 	private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	// end google authentication constants
-	
+
+	private static final Collection<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/gmail.readonly;https://www.googleapis.com/auth/calendar.readonly;https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email".split(";"));
+
 	private String stateToken;
 	
 	private final GoogleAuthorizationCodeFlow flow;
@@ -106,8 +110,17 @@ public final class GoogleAuthHelper {
 
 	}
 
-	public String getGmailData(String authCode) {
-		return null;
+	public String getGmailData(String authCode) throws Exception {
+		final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI).execute();
+		final Credential credential = flow.createAndStoreCredential(response, null);
+		final HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
+		// Make an authenticated request
+		final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
+		final HttpRequest request = requestFactory.buildGetRequest(url);
+		request.getHeaders().setContentType("application/json");
+		final String jsonIdentity = request.execute().parseAsString();
+
+		return jsonIdentity;
 	}
 
 	/*public static void listThreadsWithLabels (Gmail service, String userId,
@@ -125,8 +138,9 @@ public final class GoogleAuthHelper {
 			}
 		}
 
+		List<String> toret = Lists.newArrayList();
 		for(Thread thread : threads) {
-			System.out.println(thread.getName());
+			toret.add(thread.toPrettyString());
 		}
 	}*/
 
