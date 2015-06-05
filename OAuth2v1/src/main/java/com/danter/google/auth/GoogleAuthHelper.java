@@ -207,6 +207,7 @@ public final class GoogleAuthHelper {
                 attendants.add(orgDirectory.getInfo(part));
             }
             doc.setParticipants(attendants);
+            doc.setAttended(accepted);
         }
         return null;
     }
