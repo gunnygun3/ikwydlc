@@ -39,6 +39,11 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.flipkart</groupId>
+			<artifactId>ikwydlc</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
