@@ -1,0 +1,41 @@
+
+# use the simple server factory if you only want to run on a single port
+#server:
+#  type: simple
+#  connector:
+#    type: http
+#    port: 8080
+
+server:
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
+  applicationConnectors:
+    - type: http
+      port: 44100
+
+  adminConnectors:
+    - type: http
+      port: 44101
+
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: DEBUG
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    com.flipkart: DEBUG
+
+  appenders:
+    - type: console
+    - type: file
+      threshold: DEBUG
+      logFormat: "%-5p [%d{ISO8601,Asia/Calcutta}] %c [%thread]: %m%n%xEx"
+      currentLogFilename: /var/log/flipkart/application.log
+      archivedLogFilenamePattern: /var/log/application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 5
+      timeZone: IST
