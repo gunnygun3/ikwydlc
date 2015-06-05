@@ -32,10 +32,10 @@
       "Root Cause Analysis",
       "documentation"
     ],
-    "debugging":[
+    "problem_solving":[
       "oncall",
       "testing",
-      "stage",
+      "production issue",
       "health",
       "lag",
       "failure"
@@ -110,6 +110,14 @@
       "Abstract class",
       "API",
       "Composite"
+    ],
+    "problem_solving":[
+      "oncall",
+      "testing",
+      "production issue",
+      "health",
+      "lag",
+      "failure"
     ],
     "team_building": [
       "Counter strike",
