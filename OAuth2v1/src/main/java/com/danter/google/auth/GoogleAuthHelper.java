@@ -1,6 +1,8 @@
 package com.danter.google.auth;
 
 import com.flipkart.ESDocument;
+import com.flipkart.OrgDirectory;
+import com.flipkart.UserInfo;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
@@ -156,7 +158,7 @@ public final class GoogleAuthHelper {
         List<ESDocument> esDocumentList = Lists.newArrayList();
 
 
-
+        OrgDirectory orgDirectory = new OrgDirectory();
 
         for (JsonNode item : items) {
             JsonNode organizer = item.get("organizer");
@@ -191,7 +193,20 @@ public final class GoogleAuthHelper {
             System.out.println(createdBy + "::" + timestamp + "::" + title + "::" + desc + "::" + accepted + "::" + participants);
             ESDocument doc = new ESDocument();
 
+            if (createdBy != null)
+                doc.setOrganiser(orgDirectory.getInfo(createdBy));
+            doc.setTitle(title);
+            doc.setContents(desc);
+            doc.setSource("CALENDAR");
+            if (timestamp != null)
+                doc.setTimestamp(new DateTime(timestamp).toDate());
+            doc.setUserId(userEmailId);
 
+            List<UserInfo> attendants = Lists.newArrayList();
+            for (String part : participants) {
+                attendants.add(orgDirectory.getInfo(part));
+            }
+            doc.setParticipants(attendants);
         }
         return null;
     }
