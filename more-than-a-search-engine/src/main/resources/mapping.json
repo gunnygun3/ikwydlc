@@ -72,6 +72,9 @@
             "index": "not_analyzed"
           }
         }
+      },
+      "accepted":{
+        "type":"boolean"
       }
     }
   }

@@ -16,6 +16,7 @@ public class ESDocument {
     private String contents;
     private UserInfo organiser;
     private List<UserInfo> participants;
+    private boolean attended;
 
     public ESDocument() {
     }
@@ -76,21 +77,45 @@ public class ESDocument {
         this.userId = userId;
     }
 
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(boolean attended) {
+        this.attended = attended;
+    }
+
+    @Override
+    public String toString() {
+        return "ESDocument{" +
+                "userId='" + userId + '\'' +
+                ", title='" + title + '\'' +
+                ", source='" + source + '\'' +
+                ", timestamp=" + timestamp +
+                ", contents='" + contents + '\'' +
+                ", organiser=" + organiser +
+                ", participants=" + participants +
+                ", attended=" + attended +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ESDocument)) return false;
 
         ESDocument that = (ESDocument) o;
 
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (source != null ? !source.equals(that.source) : that.source != null) return false;
-        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
+        if (attended != that.attended) return false;
         if (contents != null ? !contents.equals(that.contents) : that.contents != null) return false;
         if (organiser != null ? !organiser.equals(that.organiser) : that.organiser != null) return false;
-        return !(participants != null ? !participants.equals(that.participants) : that.participants != null);
+        if (participants != null ? !participants.equals(that.participants) : that.participants != null) return false;
+        if (source != null ? !source.equals(that.source) : that.source != null) return false;
+        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
 
+        return true;
     }
 
     @Override
@@ -102,19 +127,7 @@ public class ESDocument {
         result = 31 * result + (contents != null ? contents.hashCode() : 0);
         result = 31 * result + (organiser != null ? organiser.hashCode() : 0);
         result = 31 * result + (participants != null ? participants.hashCode() : 0);
+        result = 31 * result + (attended ? 1 : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("userId", userId)
-                .add("title", title)
-                .add("source", source)
-                .add("timestamp", timestamp)
-                .add("contents", contents)
-                .add("organiser", organiser)
-                .add("participants", participants)
-                .toString();
     }
 }
