@@ -143,7 +143,7 @@ public final class GoogleAuthHelper {
         final HttpRequest request = requestFactory.buildGetRequest(url);
         request.getHeaders().setContentType("application/json");
         final String jsonIdentity = request.execute().parseAsString();
-        String userInfo = getUserInfoJson();
+        String emailId = getEmailId();
 
         List<String> threadIDs = getThreadIDs( new JSONObject(jsonIdentity));
         List<MailData> threadData = getThreadData(threadIDs, out);
@@ -158,7 +158,7 @@ public final class GoogleAuthHelper {
             document.setContents(StringUtils.join(mailData.getBodyList(), "||"));
             document.setOrganiser(orgDirectory.getInfo( mailData.getOrganiser()));
             document.setSource("EMAIL");
-            document.setUserId(userInfo);
+            document.setUserId(emailId);
 
             List<UserInfo> particpantInfo = new ArrayList<UserInfo>();
 

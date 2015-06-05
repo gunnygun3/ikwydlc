@@ -11,7 +11,7 @@ public class SuccessManagerTest {
     @Test
     public void test() throws Exception {
         SuccessManager manager = new MySuccessManager(new OrgDirectory(), new ESSearch(new ObjectMapper()), new ArtificialRanker());
-        JSONArray result = manager.tellMeWhatIdid("charu.jain@flipkart.com");
+        JSONArray result = manager.tellMeWhatIdid("vinodvr@flipkart.com");
 
         System.out.println(result);
     }

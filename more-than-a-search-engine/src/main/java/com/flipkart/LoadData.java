@@ -25,10 +25,10 @@ public class LoadData {
                 .put("discovery.zen.ping.multicast.enabled", "false")
                 .put("discovery.zen.ping.unicast.hosts", "localhost")
                 .put("node.name", "local-app")
-                .put("cluster.name", "hack")
+                .put("cluster.name", "zulu-hack-vinod")
                 .build();
         Node node = new NodeBuilder()
-                .clusterName("hack")
+                .clusterName("zulu-hack-vinod")
                 .client(true)
                 .data(false)
                 .settings(settings)
