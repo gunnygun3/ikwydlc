@@ -1,5 +1,6 @@
 package com.flipkart;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,8 +33,8 @@ public class ArtificialRanker {
 
             Collections.sort(list, new Comparator<Document>() {
                 public int compare(Document idx1, Document idx2) {
-                    double w1 = idx1.getContents().split("\\|\\|").length;
-                    double w2 = idx2.getContents().split("\\|\\|").length;
+                    double w1 = (StringUtils.isNotEmpty(idx1.getContents()))? idx1.getContents().split("\\|\\|").length : 0.0;
+                    double w2 = (StringUtils.isNotEmpty(idx2.getContents()))? idx2.getContents().split("\\|\\|").length : 0.0;
 
                     w1 = getWeights(idx1, w1);
                     w2 = getWeights(idx2, w2);
