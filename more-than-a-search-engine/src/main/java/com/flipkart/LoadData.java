@@ -37,9 +37,9 @@ public class LoadData {
         client = node.client();
     }
 
-    public void loadData(List<ESDocument> documentList) throws JsonProcessingException {
+    public void loadData(List<Document> documentList) throws JsonProcessingException {
         BulkRequestBuilder bulkRequest = client.prepareBulk();
-        for(ESDocument document : documentList) {
+        for(Document document : documentList) {
             bulkRequest.add(client.prepareIndex("hackday", "hackday")
                             .setSource(objectMapper.writeValueAsString(document)
                             )
