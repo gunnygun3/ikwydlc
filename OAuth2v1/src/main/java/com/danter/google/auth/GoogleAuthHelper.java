@@ -243,7 +243,18 @@ public final class GoogleAuthHelper {
     }
 
     public List<String> getParticipant (String toField){
-        return Arrays.asList(toField.split(","));
+        List<String> participants = Arrays.asList(toField.split(","));
+        List<String> outParticipants = new ArrayList<String>();
+
+        for(String participant:participants){
+            if (participant.contains("<")){
+                outParticipants.add(participant.substring(participant.indexOf("<")+1, participant.indexOf(">")));
+            }
+            else if (participant.contains("@")){
+                outParticipants.add(participant);
+            }
+        }
+        return outParticipants;
     }
 
     public List<String> getThreadIDs (JSONObject object ){
@@ -376,6 +387,5 @@ public final class GoogleAuthHelper {
 			toret.add(thread.toPrettyString());
 		}
 	}*/
-
-
+    
 }
