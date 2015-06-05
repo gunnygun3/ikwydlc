@@ -11,11 +11,16 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.util.Base64;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 
 /**
@@ -43,6 +48,7 @@ public final class GoogleAuthHelper {
     // start google authentication constants
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final String THREAD_INFO_URL = "https://www.googleapis.com/gmail/v1/users/me/threads?labelIds=SENT";
+    private static final String THREAD_DATA_URL = "https://www.googleapis.com/gmail/v1/users/me/threads/";
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     // end google authentication constants
@@ -125,7 +131,97 @@ public final class GoogleAuthHelper {
         request.getHeaders().setContentType("application/json");
         final String jsonIdentity = request.execute().parseAsString();
 
+        List<String> threadIDs = getThreadIDs( new JSONObject(jsonIdentity));
+            getThreadData(threadIDs);
+
         return jsonIdentity;
+    }
+
+    public void getThreadData(List<String> threadIDs) throws Exception {
+
+        for (String threadID : threadIDs) {
+            MailData mailData = new MailData();
+            GenericUrl url = new GenericUrl(THREAD_DATA_URL + threadID );
+            HttpRequest request = requestFactory.buildGetRequest(url);
+            request.getHeaders().setContentType("application/json");
+            JSONObject jsonResult = new JSONObject(request.execute().parseAsString());
+            JSONArray messages = jsonResult.getJSONArray("messages");
+            for (int i = 0; i < messages.length(); i++)
+            {
+                JSONObject objectInArray = messages.getJSONObject(i);
+                JSONObject midPayload = (JSONObject) objectInArray.get("payload");
+                JSONArray headers = (JSONArray) midPayload.get("headers");
+                if (i == 0){
+                    for (int j =0; j< headers.length(); j++){
+                        JSONObject header = headers.getJSONObject(j);
+                        String headerName = (String) header.get("name");
+                        if ("X-Originating-Email".equals(headerName)) {
+                            mailData.setOrganiser((String) header.get("value"));
+                        }
+                        if ("To".equals(headerName)) {
+                            mailData.setParticipants(getParticipant((String) header.get("value")));
+                        }
+                        if ("Date".equals(headerName)) {
+                            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE, DD MMM YYYY HH:mm:ss ZZ");
+                            mailData.setTimestamp(dateTimeFormatter.parseDateTime("Fri, 5 Jun 2015 19:18:01 +0530").toDate());
+                        }
+                        if ("X-Originating-Email".equals(headerName)) {
+                            mailData.setOrganiser((String) header.get("value"));
+                        }
+                        if ("Subject".equals(headerName)) {
+                            mailData.setTitle((String) header.get("value"));
+                        }
+                    }
+                }
+
+                try {
+
+                    JSONArray messagePart = (JSONArray) midPayload.get("parts");
+                    JSONObject partObject = (JSONObject) messagePart.get(0);
+                    JSONObject bodyObject = (JSONObject) partObject.get("body");
+
+                    try {
+
+                        String encodedMessage = (String) bodyObject.get("data");
+                        byte[] valueDecoded = Base64.decodeBase64(encodedMessage);
+                        mailData.addMessage(new String(valueDecoded));
+
+                    } catch (Exception ignore) {
+
+                    }
+
+                }
+                catch (Exception ignore){
+
+                }
+
+                System.out.println(mailData.toString());
+
+
+            }
+
+
+        }
+
+
+
+    }
+
+    public List<String> getParticipant (String toField){
+        return Arrays.asList(toField.split(","));
+    }
+
+    public List<String> getThreadIDs (JSONObject object ){
+        List<String> threadIDs = new ArrayList<String>();
+
+        JSONArray threadArray = (JSONArray) object.get("threads");
+
+        for (int i = 0; i < threadArray.length(); i++)
+        {
+            JSONObject objectInArray = threadArray.getJSONObject(i);
+            threadIDs.add((String) objectInArray.get("id"));
+        }
+        return threadIDs;
     }
 
     public String importData(String code) throws Exception {
@@ -156,6 +252,5 @@ public final class GoogleAuthHelper {
 			toret.add(thread.toPrettyString());
 		}
 	}*/
-
 
 }
