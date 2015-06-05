@@ -208,6 +208,8 @@ public final class GoogleAuthHelper {
             }
             doc.setParticipants(attendants);
             doc.setAttended(accepted);
+
+            esDocumentList.add(doc);
         }
         return null;
     }
