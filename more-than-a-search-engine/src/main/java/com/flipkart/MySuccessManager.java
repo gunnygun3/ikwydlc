@@ -25,9 +25,7 @@ public class MySuccessManager implements SuccessManager {
 
     @Override
     public JSONObject tellMeWhatIdid(String userName) throws Exception {
-        JSONObject userInfo = orgDirectory.getInfo(userName);
-        String designation = userInfo.optString("designation");
-        String team = userInfo.optString("department");
+        UserInfo userInfo = orgDirectory.getInfo(userName);
         SearchResponse responses = search.search(userInfo);
 
         return null;

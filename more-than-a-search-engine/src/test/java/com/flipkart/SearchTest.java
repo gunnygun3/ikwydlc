@@ -13,9 +13,9 @@ public class SearchTest {
     public void test() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Search search =  new ESSearch(objectMapper);
-        JSONObject userInfo = new JSONObject();
-        userInfo.put("email","charu.jain@flipkart.com");
-        userInfo.put("designation","Architect");
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail("charu.jain@flipkart.com");
+        userInfo.setDesignation("Architect");
 
         SearchResponse response = search.search(userInfo);
         System.out.println(response.getDocuments().size());

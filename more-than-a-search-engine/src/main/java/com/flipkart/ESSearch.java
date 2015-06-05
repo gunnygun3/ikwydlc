@@ -48,10 +48,9 @@ public class ESSearch implements Search {
     }
 
     @Override
-    public SearchResponse search(JSONObject userInfo) throws Exception {
-        String userId = userInfo.optString("email");
-        String designation = userInfo.optString("designation");
-
+    public SearchResponse search(UserInfo userInfo) throws Exception {
+        String userId = userInfo.getEmail();
+        String designation = userInfo.getDesignation();
         return buildSearchRequest(userId, designation);
 
     }

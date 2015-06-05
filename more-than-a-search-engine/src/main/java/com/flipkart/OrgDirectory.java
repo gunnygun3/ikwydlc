@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.json.JSONObject;
 
+import javax.jws.soap.SOAPBinding;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -22,14 +23,20 @@ public class OrgDirectory {
         client = Client.create(clientConfig);
     }
 
-    public JSONObject getInfo(String userName) {
+    public UserInfo getInfo(String userName) {
         try {
             ClientResponse response = client.resource("http://org-dir.nm.flipkart.com:38700/employeeData/email")
                     .path(userName)
                     .accept(MediaType.APPLICATION_JSON_TYPE).get(ClientResponse.class);
             if (200 == response.getStatus()) {
                 String responseEntity = response.getEntity(String.class);
-                return new JSONObject(responseEntity);
+                JSONObject json = new JSONObject(responseEntity);
+                UserInfo userInfo = new UserInfo();
+                userInfo.setDesignation(json.optString("designation"));
+                userInfo.setTeam(json.optString("department"));
+                userInfo.setName(json.optString("name"));
+                userInfo.setEmail(json.optString("email"));
+                return userInfo;
             } else {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatus() + " for request " + userName);
             }

@@ -11,5 +11,5 @@ public interface Search {
      * @param userInfo
      * @return
      */
-    SearchResponse search(JSONObject userInfo) throws Exception;
+    SearchResponse search(UserInfo userInfo) throws Exception;
 }
