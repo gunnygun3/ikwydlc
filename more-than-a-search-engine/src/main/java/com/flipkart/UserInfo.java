@@ -57,4 +57,28 @@ public class UserInfo {
                 .add("email", email)
                 .toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserInfo userInfo = (UserInfo) o;
+
+        if (name != null ? !name.equals(userInfo.name) : userInfo.name != null) return false;
+        if (designation != null ? !designation.equals(userInfo.designation) : userInfo.designation != null)
+            return false;
+        if (team != null ? !team.equals(userInfo.team) : userInfo.team != null) return false;
+        return !(email != null ? !email.equals(userInfo.email) : userInfo.email != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (designation != null ? designation.hashCode() : 0);
+        result = 31 * result + (team != null ? team.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        return result;
+    }
 }
