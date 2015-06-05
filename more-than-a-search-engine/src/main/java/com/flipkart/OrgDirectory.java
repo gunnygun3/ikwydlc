@@ -27,6 +27,7 @@ public class OrgDirectory {
     private static Map<String, UserInfo> cache = Maps.newConcurrentMap();
 
     public UserInfo getInfo(String userName) {
+        if (userName == null) return null;
         if (cache.containsKey(userName)) {
             return cache.get(userName);
         }

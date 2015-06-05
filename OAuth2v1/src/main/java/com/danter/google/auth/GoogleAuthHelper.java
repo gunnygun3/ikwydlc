@@ -15,6 +15,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -136,19 +137,43 @@ public final class GoogleAuthHelper {
 
     }
 
-    public String getGmailData() throws Exception {
+    public List<ESDocument> getGmailData() throws Exception {
         // Make an authenticated request
         final GenericUrl url = new GenericUrl(THREAD_INFO_URL);
         final HttpRequest request = requestFactory.buildGetRequest(url);
         request.getHeaders().setContentType("application/json");
         final String jsonIdentity = request.execute().parseAsString();
+        String userInfo = getUserInfoJson();
 
         List<String> threadIDs = getThreadIDs( new JSONObject(jsonIdentity));
-            getThreadData(threadIDs);
+        List<MailData> threadData = getThreadData(threadIDs);
+        OrgDirectory orgDirectory = new OrgDirectory();
 
-        return jsonIdentity;
+        List<ESDocument> gmailDocument = new ArrayList<ESDocument>();
+        for (MailData mailData: threadData){
+            ESDocument document = new ESDocument();
+            document.setTimestamp(mailData.getTimestamp());
+            document.setTitle(mailData.getTitle());
+            document.setAttended(false);
+            document.setContents(StringUtils.join(mailData.getBodyList(), "||"));
+            document.setOrganiser(orgDirectory.getInfo( mailData.getOrganiser()));
+            document.setSource("EMAIL");
+            document.setUserId(userInfo);
+
+            List<UserInfo> particpantInfo = new ArrayList<UserInfo>();
+
+            for (String participant : mailData.getParticipants()){
+                particpantInfo.add(orgDirectory.getInfo(participant));
+            }
+            document.setParticipants(particpantInfo);
+            gmailDocument.add(document);
+        }
+        return gmailDocument;
     }
-    public void getThreadData(List<String> threadIDs) throws Exception {
+
+    public List<MailData> getThreadData(List<String> threadIDs) throws Exception {
+
+        List<MailData> completeMailData = new ArrayList<MailData>();
 
         for (String threadID : threadIDs) {
             MailData mailData = new MailData();
@@ -205,8 +230,7 @@ public final class GoogleAuthHelper {
                 catch (Exception ignore){
 
                 }
-
-                System.out.println(mailData.toString());
+                completeMailData.add(mailData);
 
 
             }
@@ -214,7 +238,7 @@ public final class GoogleAuthHelper {
 
         }
 
-
+        return completeMailData;
 
     }
 
@@ -239,7 +263,7 @@ public final class GoogleAuthHelper {
     private static final String CALANDER_INFO_URL = "https://www.googleapis.com/calendar/v3/calendars/<EMAIL_ID>/events?timeMax=<END_TIME>&timeMin=<ST_TIME>";
 
 
-    private String getCalanderData(String stDate, String endDate) throws Exception {
+    private List<ESDocument> getCalanderData(String stDate, String endDate) throws Exception {
         // Make an authenticated request
         String userEmailId = getEmailId();
         DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTime();
@@ -308,19 +332,19 @@ public final class GoogleAuthHelper {
 
             esDocumentList.add(doc);
         }
-        return null;
+        return esDocumentList;
     }
 
     ObjectMapper mapper = new ObjectMapper();
 
     public String importData(String stDate, String endDate) throws Exception {
         String userInfo = getUserInfoJson();
-        String gmailData = getGmailData();
+        List<ESDocument> gmailData = getGmailData();
         System.out.println(userInfo);
         System.out.println(gmailData);
 
         System.out.println("-----------------------------");
-        String calendarData = getCalanderData(stDate, endDate);
+        List<ESDocument> calendarData = getCalanderData(stDate, endDate);
         System.out.println(calendarData);
         return "Data Imported!";
     }
