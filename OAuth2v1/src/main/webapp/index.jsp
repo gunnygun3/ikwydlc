@@ -51,7 +51,7 @@ body {
 			 * The GoogleAuthHelper handles all the heavy lifting, and contains all "secrets"
 			 * required for constructing a google login url.
 			 */
-			final GoogleAuthHelper helper = new GoogleAuthHelper();
+			final GoogleAuthHelper helper = new GoogleAuthHelper(null);
 
 			if (request.getParameter("code") == null
 					|| request.getParameter("state") == null) {
@@ -67,67 +67,8 @@ body {
 				 */
 				session.setAttribute("state", helper.getStateToken());
 
-			} else if (request.getParameter("code") != null && request.getParameter("state") != null
-					&& request.getParameter("state").equals(session.getAttribute("state"))) {
-
-				session.removeAttribute("state");
-
-				out.println("<pre>");
-				/*
-				 * Executes after google redirects to the callback url.
-				 * Please note that the state request parameter is for convenience to differentiate
-				 * between authentication methods (ex. facebook oauth, google oauth, twitter, in-house).
-				 * 
-				 * GoogleAuthHelper()#getUserInfoJson(String) method returns a String containing
-				 * the json representation of the authenticated user's information. 
-				 * At this point you should parse and persist the info.
-				 */
-
-				//out.println(helper.getUserInfoJson(request.getParameter("code")));
-
-				out.println("</pre>");
-
-				out.println("<pre>");
-
-				out.println(helper.getGmailData(request.getParameter("code")));
-
-				out.println("</pre>");
-
 			}
 		%>
-	</div>
-	<br />
-	<div class="readme">
-		<h1>Read Me First</h1>
-		
-		<h3>Assumptions</h3>
-
-		<ul>
-			<li>familiarity with OOP, java, maven, and jee</li>
-			<li>java application server listening on localhost:8080</li>
-		</ul>
-
-		<h3>Prerequisites</h3>
-
-		<ul>
-			<li>Google API access credentials (Client ID, Client Secret).
-				Set it up here <a href='https://code.google.com/apis/console/'>https://code.google.com/apis/console/</a>
-			</li>
-			<li>Set up allowed Redirect URIs at Google API &rarr; API
-				Access. Input: http://localhost:8080/OAuth2v1/index.jsp</li>
-			<li>a positive outlook on life</li>
-		</ul>
-		
-		<h3>Usage</h3>
-
-		<ol>
-			<li>Add Client ID, and Client Secret parameters to <b>GoogleAuthHelper.java</b></li>
-			<li>Compile the project (<b>$ mvn clean install</b>)</li>
-			<li>Deploy war to application server</li>
-			<li>Browse to: <a href="http://localhost:8080/OAuth2v1/">http://localhost:8080/OAuth2v1/</a></li>
-			<li>Click <b>&quot;log in with google&quot;</b> on top of this page</li>
-		</ol>
-		
 	</div>
 </body>
 </html>
