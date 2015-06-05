@@ -18,14 +18,16 @@ public class ESClient {
 
     public static void initialize() {
 
+        String clusterName = "hack";
+
         Settings settings = ImmutableSettings.settingsBuilder()
                 .put("discovery.zen.ping.multicast.enabled", "false")
                 .put("discovery.zen.ping.unicast.hosts", "localhost")
                 .put("node.name", "local-app")
-                .put("cluster.name", "anuj-hack")
+                .put("cluster.name", clusterName)
                 .build();
         Node node = new NodeBuilder()
-                .clusterName("anuj-hack")
+                .clusterName(clusterName)
                 .client(true)
                 .data(false)
                 .settings(settings)

@@ -196,18 +196,21 @@ public final class GoogleAuthHelper {
                     for (int j =0; j< headers.length(); j++){
                         JSONObject header = headers.getJSONObject(j);
                         String headerName = (String) header.get("name");
-                        if ("X-Originating-Email".equals(headerName)) {
-                            mailData.setOrganiser((String) header.get("value"));
+                        if ("From".equals(headerName)) {
+                            mailData.setOrganiser(getParticipant((String)header.get("value")).get(0));
                         }
                         if ("To".equals(headerName)) {
                             mailData.setParticipants(getParticipant((String) header.get("value")));
                         }
                         if ("Date".equals(headerName)) {
-                            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE, DD MMM YYYY HH:mm:ss ZZ");
-                            mailData.setTimestamp(dateTimeFormatter.parseDateTime("Fri, 5 Jun 2015 19:18:01 +0530").toDate());
-                        }
-                        if ("X-Originating-Email".equals(headerName)) {
-                            mailData.setOrganiser((String) header.get("value"));
+                            try {
+                                String d = (String) header.get("value");
+                                d = d.replaceAll(" \\(.*?\\)","");
+                                DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE, DD MMM YYYY HH:mm:ss ZZ");
+                                mailData.setTimestamp(dateTimeFormatter.parseDateTime(d).toDate());
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                         if ("Subject".equals(headerName)) {
                             mailData.setTitle((String) header.get("value"));
