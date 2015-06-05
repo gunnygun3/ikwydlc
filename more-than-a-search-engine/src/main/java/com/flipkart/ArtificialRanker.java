@@ -3,12 +3,15 @@ package com.flipkart;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 
 /**
  * Created by gopi.vishwakarma on 05/06/15.
  */
+
 public class ArtificialRanker {
     private final JSONObject weights;
 

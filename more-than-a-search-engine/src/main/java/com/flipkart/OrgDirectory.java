@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.json.JSONObject;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 

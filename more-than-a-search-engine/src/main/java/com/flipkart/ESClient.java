@@ -22,10 +22,10 @@ public class ESClient {
                 .put("discovery.zen.ping.multicast.enabled", "false")
                 .put("discovery.zen.ping.unicast.hosts", "localhost")
                 .put("node.name", "local-app")
-                .put("cluster.name", "anuj-hack")
+                .put("cluster.name", "zulu-hack")
                 .build();
         Node node = new NodeBuilder()
-                .clusterName("anuj-hack")
+                .clusterName("zulu-hack")
                 .client(true)
                 .data(false)
                 .settings(settings)
