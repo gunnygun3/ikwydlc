@@ -1,5 +1,6 @@
 package com.flipkart;
 
+import org.apache.lucene.util.CollectionUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -57,8 +58,37 @@ public class MySuccessManager implements SuccessManager {
 
             toReturn.put(jsonObject);
         }
-
+        _filter(toReturn);
         return toReturn;
+    }
+
+    private void _filter(JSONArray args) {
+        for (int i = 0; i < args.length(); i++) {
+            JSONObject item = args.getJSONObject(i);
+            JSONArray review = item.getJSONArray("Review");
+            for (int j = 0; j < review.length() - 1; j++) {
+                Set<String> words = new HashSet<>();
+                String current = review.getJSONObject(j).getString("Summary").replaceAll("[0-9]|-|\\+","");
+                String splitCurrent[] = current.split(" ");
+                Collections.addAll(words, splitCurrent);
+
+                for (int k = j + 1; k < review.length(); ) {
+                    Set<String> wordsK = new HashSet<>();
+                    String currentK = review.getJSONObject(k).getString("Summary").replaceAll("[0-9]|-|\\+","");
+                    String splitCurrentK[] = currentK.split(" ");
+                    Collections.addAll(wordsK, splitCurrentK);
+
+                    wordsK.retainAll(words);
+                    double score = ((double) wordsK.size() / (double) (splitCurrentK.length + words.size()));
+                    if (score > 0.35) {
+                        review.remove(k);
+                    } else {
+                        k++;
+                    }
+                }
+                review.getJSONObject(j).put("Summary",current.replaceAll("Schedule| st | nd | th |\\(|\\)|Phone:.*cell",""));
+            }
+        }
     }
 
 
