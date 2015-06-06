@@ -373,10 +373,17 @@ public final class GoogleAuthHelper {
         return "Data Imported!";
     }
 
-    private String getEmailId() throws IOException {
+    public String getEmailId() throws IOException {
         String userInfo = getUserInfoJson();
         JsonNode userNode = mapper.readTree(userInfo);
         String emailId = userNode.get("email").getTextValue();
+        return emailId;
+    }
+
+    public String getName() throws IOException {
+        String userInfo = getUserInfoJson();
+        JsonNode userNode = mapper.readTree(userInfo);
+        String emailId = userNode.get("name").getTextValue();
         return emailId;
     }
 
