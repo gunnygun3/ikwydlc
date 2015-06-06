@@ -29,7 +29,16 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
+    ],
+    "problem_solving":[
+      "oncall",
+      "testing",
+      "production issue",
+      "health",
+      "lag",
+      "failure"
     ],
     "team_building": [
       "Counter strike",
@@ -41,7 +50,6 @@
       "drinks",
       "lunch",
       "dinner",
-      "home",
       "hotel",
       "outdoor",
       "running",
@@ -81,7 +89,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",
@@ -100,6 +109,14 @@
       "Abstract class",
       "API",
       "Composite"
+    ],
+    "problem_solving":[
+      "oncall",
+      "testing",
+      "production issue",
+      "health",
+      "lag",
+      "failure"
     ],
     "team_building": [
       "Counter strike",
@@ -151,7 +168,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",
@@ -237,7 +255,8 @@
       "Routing ",
       "Data crunch",
       "RCA",
-      "Root Cause Analysis"
+      "Root Cause Analysis",
+      "documentation"
     ],
     "design": [
       "Diagram",

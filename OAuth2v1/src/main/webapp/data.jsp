@@ -10,15 +10,23 @@
 
             out.println("<pre>");
 
-            String resp = helper.importData("2015-01-01", "2015-05-31", out);
+            String resp = "Import Done..";
 
             out.println(resp);
             out.println();
 
             out.println("</pre>");
 
-        }
+            out.println("<input type='button' value='clickMe' onclick=\"load('" +helper.getEmailId() + "','" + helper.getName() + "')\"></input>");
 
+        }
         %>
+
     </div>
 </body>
+
+<script>
+    function load(email, name) {
+        window.location.replace("http://localhost:25500?email_id=" + email + "&name=" + name);
+    }
+</script>

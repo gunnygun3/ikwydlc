@@ -13,6 +13,7 @@ public class SuccessManagerTest {
         SuccessManager manager = new MySuccessManager(new OrgDirectory(), new ESSearch(new ObjectMapper()), new ArtificialRanker());
         JSONArray result = manager.tellMeWhatIdid("gopi.vishwakarma@flipkart.com");
 
+
         System.out.println(result);
     }
 }

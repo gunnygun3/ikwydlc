@@ -1,0 +1,39 @@
+
+<% size = (100 / @json_object.size)-2 %>
+<% @json_object.each do |compitency| %>
+    <div style="float: left; width: <%= size%>%; margin-left: 10px;">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <%= compitency["Competency"].titleize %>
+        </div>
+        <!-- .panel-heading -->
+        <div class="panel-body">
+          <div class="panel-group" id="accordion">
+
+            <% compitency["Review"].each do |review_line_item| %>
+                <div class="panel panel-default" style="margin-bottom: 15px">
+                  <div class="panel-heading" style="background-color: #eaeaea;">
+                    <h4 class="panel-title" >
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" class=""> <%= review_line_item["Summary"] %></a>
+                    </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true">
+                    <div class="panel-body">
+                      <% review_line_item["Peers"][0..4].each do |peer| %>
+                      <div class="peer" style="float: left; font-size: smaller; margin-right:5px"> <%= peer %> </div>
+                      <% end %>
+
+                    </div>
+                  </div>
+                </div>
+            <% end %>
+
+          </div>
+        </div>
+        <!-- .panel-body -->
+      </div>
+    </div>
+
+
+
+<% end %>
