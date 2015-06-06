@@ -28,17 +28,18 @@
       "Crunching",
       "Routing ",
       "Data crunch",
-      "RCA",
-      "Root Cause Analysis",
       "documentation"
     ],
     "problem_solving":[
       "oncall",
       "testing",
       "production issue",
+      "prod issue",
       "health",
       "lag",
-      "failure"
+      "failure",
+      "RCA",
+      "Root Cause Analysis"
     ],
     "team_building": [
       "Counter strike",
@@ -88,8 +89,6 @@
       "Crunching",
       "Routing ",
       "Data crunch",
-      "RCA",
-      "Root Cause Analysis",
       "documentation"
     ],
     "design": [
@@ -114,9 +113,12 @@
       "oncall",
       "testing",
       "production issue",
+      "prod issue",
       "health",
       "lag",
-      "failure"
+      "failure",
+      "RCA",
+      "Root Cause Analysis"
     ],
     "team_building": [
       "Counter strike",
@@ -128,10 +130,8 @@
       "drinks",
       "lunch",
       "dinner",
-      "home",
       "hotel",
       "outdoor",
-      "running",
       "movie",
       "Chai soota",
       "Smoking",
@@ -199,10 +199,8 @@
       "drinks",
       "lunch",
       "dinner",
-      "home",
       "hotel",
       "outdoor",
-      "running",
       "movie",
       "Chai soota",
       "Smoking",
@@ -224,6 +222,17 @@
       "Monitoring",
       "Alerting",
       "Alerts"
+    ],
+    "problem_solving":[
+      "oncall",
+      "testing",
+      "production issue",
+      "prod issue",
+      "health",
+      "lag",
+      "failure",
+      "RCA",
+      "Root Cause Analysis"
     ]
   },
   "Architect": {
@@ -286,7 +295,6 @@
       "drinks",
       "lunch",
       "dinner",
-      "home",
       "hotel",
       "outdoor",
       "running",
@@ -311,6 +319,17 @@
       "Monitoring",
       "Alerting",
       "Alerts"
+    ],
+    "problem_solving":[
+      "oncall",
+      "testing",
+      "production issue",
+      "prod issue",
+      "health",
+      "lag",
+      "failure",
+      "RCA",
+      "Root Cause Analysis"
     ]
   }
 }
